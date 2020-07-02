@@ -53,7 +53,7 @@ def compute_square_loss(X, y, theta):
     htheta=np.dot(X,theta)    #product between X and theta
     delta= y-htheta           # difference between the labels and the hypothesis
 
-    inner = np.power(delta, 2)
+    inner = np.dot(delta.T,delta)
     loss=np.sum(inner) / (2 * len(X))
     
     return loss
@@ -78,8 +78,10 @@ def compute_square_loss_gradient(X, y, theta):
 
     htheta=np.dot(X,theta)    #product between X and theta
     delta= htheta-y           # difference between the labels and the hypothesis
-    prod=np.dot(delta.T,X)/X.shape[0]    
-    grad=prod.T      
+    prod=np.dot(delta.T,X)    
+    grad=prod.T/X.shape[0]
+
+
     return grad
 
 
@@ -247,7 +249,7 @@ def stochastic_grad_descent(X, y, alpha=0.1, lambda_reg=1, num_iter=1000):
 
 def main():
     #initialise parameter for gradient descent
-    alpha=1
+    alpha=0.01
 
     print("Current Working Directory " , os.getcwd())
     path=os.getcwd() + "\\"
@@ -259,47 +261,38 @@ def main():
     X_train = df.values[:,:-1]    # data
     y_train = df.values[:,-1]     # labels
 
-    # df = pd.read_csv(path +'data.csv', delimiter=',')
-    # X = df.values[:,:-1]    # data
-    # y = df.values[:,-1]     # labels
-
-    print('Split into Train and Test')
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size =100, random_state=10)
-
-    print("Scaling all to [0, 1] and add bias term")
-    # X_train, X_test = feature_normalization(X_train, X_test)
+    print("Add bias term")
     X_train = np.hstack((X_train, np.ones((X_train.shape[0], 1))))  # Add bias term
-    # X_test = np.hstack((X_test, np.ones((X_test.shape[0], 1)))) # Add bias term
     y_train=y_train.reshape((y_train.shape[0], 1))
-    # y_test=y_test.reshape((y_test.shape[0], 1))
-
-    print("Random Initialisation of theta matrix")
-    # theta=np.random.rand(X_train.shape[1],1)
-    theta=np.zeros((X_train.shape[1],1))
 
     ###### Now that we are all ready, let's calculate the cost function and the gradient
     # THE COST FUNCTION is here defined as the norm 2, which correspond to the sum of the squared values of the 
     # difference between the predicted label "X*theta"and the true label "y" 
+   
+    ### Cost function check
+    theta=np.zeros((X_train.shape[1],1))
     print("Calculate the square loss")
     loss=compute_square_loss(X_train, y_train, theta)
-    print("loss=",loss)
+    print("Predicted loss 32,07 , Calculated loss=",loss)
 
+    theta[0,0]=2
+    theta[1,0]=-1
+    loss=compute_square_loss(X_train, y_train, theta)
+    print("predicted loss 54,24 , Calculated loss=",loss)
+
+
+    print("Initialisation of theta matrix")
+    # theta=np.random.rand(X_train.shape[1],1)
+    theta=np.zeros((X_train.shape[1],1))
+
+    ### GRADIENT DESCENT CHECK
     print("Calculate the gradient for Theta")
+    grad=compute_square_loss_gradient(X_train, y_train, theta)
+    print("theta pred. = -0.65, -0.05 ; theta =", alpha*grad)
     # ipdb.set_trace()
-    # grad=compute_square_loss_gradient(X_train, y_train, theta)
-    # theta=theta-alpha*grad
-    
-    # ipdb.set_trace()
-    grad= np.zeros(theta.shape)     #intialise the gradient
-
-    htheta=np.dot(X_train,theta)    #product between X and theta
-    delta= htheta-y_train           # difference between the labels and the hypothesis
-    prod=np.dot(delta.T,X_train)/X_train.shape[0]    
-    grad=prod.T
 
     # ipdb.set_trace()
-    ipdb.set_trace()
-    niter=10
+    niter=20
     Loss=np.zeros((niter,1))
     ##for loop
     for iter in range(niter):
