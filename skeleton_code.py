@@ -5,16 +5,12 @@ import sys
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import ipdb   #for breakpoints
+import os
 
-
-path = r"C:\Users\luana\Dropbox\Python\Bloomberg_course\hw1\hw1-sgd\\"
-
-### Assignment Owner: Tian Wang
+### Inspired by Bloomberg course (Tian Wang)
 
 #######################################
 #### Normalization
-
-
 def feature_normalization(train, test):
     """Rescale the data so that each feature in the training set is in
     the interval [0,1], and apply the same transformations to the test
@@ -35,7 +31,6 @@ def feature_normalization(train, test):
     test_normalized= test_normalized/test_normalized.max()
 
     return train_normalized, test_normalized
-    # TODO
 
 
 ########################################
@@ -54,8 +49,13 @@ def compute_square_loss(X, y, theta):
         loss - the square loss, scalar
     """
     loss = 0 #initialize the square_loss
-    inner = np.power(((X * theta.T) - y), 2)
+
+    htheta=np.dot(X,theta)    #product between X and theta
+    delta= y-htheta           # difference between the labels and the hypothesis
+
+    inner = np.power(delta, 2)
     loss=np.sum(inner) / (2 * len(X))
+    
     return loss
 
 
@@ -242,6 +242,10 @@ def stochastic_grad_descent(X, y, alpha=0.1, lambda_reg=1, num_iter=1000):
 ##Y-axis: log(objective_function_value) and/or objective_function_value
 
 def main():
+
+    print("Current Working Directory " , os.getcwd())
+    path=os.getcwd() + "\\"
+    
     #Loading the dataset
     print('loading the dataset')
 
@@ -252,24 +256,20 @@ def main():
     print('Split into Train and Test')
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size =100, random_state=10)
 
-    print("Scaling all to [0, 1]")
-
-    #ipdb.set_trace()
+    print("Scaling all to [0, 1] and add bias term")
     X_train, X_test = feature_normalization(X_train, X_test)
     X_train = np.hstack((X_train, np.ones((X_train.shape[0], 1))))  # Add bias term
     X_test = np.hstack((X_test, np.ones((X_test.shape[0], 1)))) # Add bias term
 
-    # theta=np.array(X_train.shape[1],1) #np.ones((X_train.shape[0],1))
-    # thetaT=np.transpose(theta)
-    # htheta=np.dot(thetaT,X_train)
-    # delta= y_train-htheta
+    print("Initialisation of theta matrix")
+    theta=np.ones((X_train.shape[1],1)) 
 
-    inner = np.power(((X * theta.T) - y), 2)
-    loss=np.sum(inner) / (2 * len(X))
-    
+    print("Calculate the square loss")
+    loss=compute_square_loss(X_train, y_train, theta)
+    print("loss=",loss)
 
-    # compute_square_loss(X_train, y, y_train)
-    # TODO
+    # ipdb.set_trace()
+
 
 if __name__ == "__main__":
     main()
