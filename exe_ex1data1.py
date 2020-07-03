@@ -321,7 +321,7 @@ def main():
     ###########################################################
     ### plot the cost function with respect to the number of iteration
     x = np.linspace(1, niter,niter)
-    plt.figure(1)
+    f1=plt.figure(1)
     plt.plot(x,Loss)
     plt.xlabel('iteration')
     plt.ylabel('Cost Function')
@@ -329,9 +329,8 @@ def main():
 
     ###########################################################
     ### PLOT THE REGRESSION CURVE
-    ipdb.set_trace()
-    plt.figure(2)
-    plt.plot(X_train,y_train)
+    f2=plt.figure(2)
+    plt.plot(X_train[:,0],y_train ,'o')
     # plt.plot(X_train,theta)
     plt.xlabel('iteration')
     plt.ylabel('Cost Function')
