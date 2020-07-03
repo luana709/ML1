@@ -265,11 +265,13 @@ def main():
     X_train = np.hstack((X_train, np.ones((X_train.shape[0], 1))))  # Add bias term
     y_train=y_train.reshape((y_train.shape[0], 1))
 
+    ###########################################################
     ###### Now that we are all ready, let's calculate the cost function and the gradient
     # THE COST FUNCTION is here defined as the norm 2, which correspond to the sum of the squared values of the 
-    # difference between the predicted label "X*theta"and the true label "y" 
-   
+    # difference between the predicted label "X*theta" and the true label "y" 
+    ###########################################################
     ### Cost function check
+    ###########################################################
     theta=np.zeros((X_train.shape[1],1))
     print("Calculate the square loss")
     loss=compute_square_loss(X_train, y_train, theta)
@@ -281,16 +283,20 @@ def main():
     print("predicted loss 54,24 , Calculated loss=",loss)
 
 
-    print("Initialisation of theta matrix")
-    # theta=np.random.rand(X_train.shape[1],1)
-    theta=np.zeros((X_train.shape[1],1))
 
-    ### GRADIENT DESCENT CHECK
+    ###########################################################
+    ### GRADIENT CHECK
+    ###########################################################
+    print("Initialisation of theta matrix")
+    theta=np.zeros((X_train.shape[1],1))
     print("Calculate the gradient for Theta")
     grad=compute_square_loss_gradient(X_train, y_train, theta)
     print("theta pred. = -0.65, -0.05 ; theta =", alpha*grad)
-    # ipdb.set_trace()
-
+ 
+ 
+    ###########################################################
+    ### GRADIENT DESCENT LOOP
+    ###########################################################
     # ipdb.set_trace()
     niter=20
     Loss=np.zeros((niter,1))
@@ -305,21 +311,36 @@ def main():
 
         Loss[iter]=loss
 
-        difftheta=np.mean(theta-theta0)
-        diffgrad=np.mean(grad-grad0)
-        print(iter)
-        print("cost=",loss)
-        print("diff theta=",difftheta)
-        print("diff grad=",diffgrad)
+        # difftheta=np.mean(theta-theta0)
+        # diffgrad=np.mean(grad-grad0)
+        # print(iter)
+        # print("cost=",loss)
+        # print("diff theta=",difftheta)
+        # print("diff grad=",diffgrad)
 
-
+    ###########################################################
+    ### plot the cost function with respect to the number of iteration
     x = np.linspace(1, niter,niter)
+    plt.figure(1)
     plt.plot(x,Loss)
     plt.xlabel('iteration')
     plt.ylabel('Cost Function')
     plt.show()
-    # ipdb.set_trace()
-    # 
+
+    ###########################################################
+    ### PLOT THE REGRESSION CURVE
+    ipdb.set_trace()
+    plt.figure(2)
+    plt.plot(X_train,y_train)
+    # plt.plot(X_train,theta)
+    plt.xlabel('iteration')
+    plt.ylabel('Cost Function')
+    plt.show() 
+
+
+
+
+
 
 if __name__ == "__main__":
     main()
