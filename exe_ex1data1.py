@@ -9,6 +9,12 @@ import os
 
 ### Inspired by Bloomberg course on Machine Learning with python and the Coursera course.
 
+#### PROBLEM :
+# Suppose you are the CEO of a restaurant franchise and are considering different cities for opening a new
+# outlet. The chain already has trucks in various cities and you have data for
+# profits and populations from the cities.
+
+
 #######################################
 #### Normalization
 def feature_normalization(train, test):
@@ -35,7 +41,6 @@ def feature_normalization(train, test):
 
 ########################################
 #### The square loss function
-
 def compute_square_loss(X, y, theta):
     """
     Given a set of X, y, theta, compute the square loss for predicting y with X*theta
@@ -57,7 +62,6 @@ def compute_square_loss(X, y, theta):
     loss=np.sum(inner) / (2 * len(X))
     
     return loss
-
 
 
 ########################################
@@ -297,8 +301,7 @@ def main():
     ###########################################################
     ### GRADIENT DESCENT LOOP
     ###########################################################
-    # ipdb.set_trace()
-    niter=20
+    niter=1500
     Loss=np.zeros((niter,1))
     ##for loop
     for iter in range(niter):
@@ -311,31 +314,27 @@ def main():
 
         Loss[iter]=loss
 
-        # difftheta=np.mean(theta-theta0)
-        # diffgrad=np.mean(grad-grad0)
-        # print(iter)
-        # print("cost=",loss)
-        # print("diff theta=",difftheta)
-        # print("diff grad=",diffgrad)
-
     ###########################################################
     ### plot the cost function with respect to the number of iteration
     x = np.linspace(1, niter,niter)
     f1=plt.figure(1)
+    plt.subplot(121)
     plt.plot(x,Loss)
     plt.xlabel('iteration')
     plt.ylabel('Cost Function')
-    plt.show()
 
     ###########################################################
     ### PLOT THE REGRESSION CURVE
-    f2=plt.figure(2)
-    plt.plot(X_train[:,0],y_train ,'o')
-    # plt.plot(X_train,theta)
-    plt.xlabel('iteration')
-    plt.ylabel('Cost Function')
+    plt.subplot(122)
+    plt.plot(X_train[:,0],y_train ,'o',label="data")
+    plt.plot(X_train[:,0],np.dot(X_train,theta) ,'o--',label="Regression curve")
+    plt.xlabel('Population')
+    plt.ylabel('Profits')
+    # plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
+    plt.legend(loc='lower right')
     plt.show() 
 
+    # ipdb.set_trace()
 
 
 
